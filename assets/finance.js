@@ -11,6 +11,22 @@ function closeMenu(){mobile.hidden=true;menu.setAttribute('aria-expanded','false
 menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');mobile.hidden=!open;});
 $$('#mobile-menu a').forEach(a=>a.addEventListener('click',closeMenu));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMenu();});
+const officeGallery=$('.office-gallery');
+if(officeGallery){
+ const lightbox=document.createElement('div');
+ lightbox.className='office-lightbox';
+ lightbox.setAttribute('role','dialog');
+ lightbox.setAttribute('aria-modal','true');
+ lightbox.setAttribute('aria-label','Просмотр фотографии офиса');
+ lightbox.innerHTML='<button class="office-lightbox-close" type="button" aria-label="Закрыть фотографию">×</button><img alt="">';
+ document.body.append(lightbox);
+ const lightboxImage=lightbox.querySelector('img');
+ const closeLightbox=()=>{lightbox.classList.remove('is-open');document.body.classList.remove('modal-open');};
+ officeGallery.querySelectorAll('img').forEach(image=>image.addEventListener('click',()=>{lightboxImage.src=image.src;lightboxImage.alt=image.alt;lightbox.classList.add('is-open');document.body.classList.add('modal-open');}));
+ lightbox.querySelector('.office-lightbox-close').addEventListener('click',closeLightbox);
+ lightbox.addEventListener('click',event=>{if(event.target===lightbox)closeLightbox();});
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&lightbox.classList.contains('is-open'))closeLightbox();});
+}
 const quickAmount=$('#quick-amount'), service=$('#request-service'),amount=$('#request-amount');
 let method='supplier';
 $$('[data-method]').forEach(b=>b.addEventListener('click',()=>{method=b.dataset.method;$$('[data-method]').forEach(t=>{t.classList.toggle('active',t===b);t.setAttribute('aria-pressed',String(t===b));});}));
