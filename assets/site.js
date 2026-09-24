@@ -101,7 +101,7 @@ form?.addEventListener('submit', async e => {
   } catch { /* The manual Telegram fallback remains available below. */ }
   if (submitButton) { submitButton.disabled = false; submitButton.firstChild.textContent = originalSubmitLabel; }
   $('#message-preview').textContent = currentMessage;
-  $('#telegram-send').href = 'https://t.me/VDS_Logistic_Support?text=' + encodeURIComponent(currentMessage);
+  $('#telegram-send').href = 'https://t.me/eastgade_support?text=' + encodeURIComponent(currentMessage);
   $('#quote-result h3').textContent = sent ? 'Заявка отправлена' : 'Не удалось отправить автоматически';
   $('#quote-result > p').textContent = sent ? 'Заявка уже передана менеджеру в рабочую Telegram-группу.' : 'Проверьте соединение или откройте Telegram и отправьте подготовленный текст вручную.';
   form.hidden = true;
