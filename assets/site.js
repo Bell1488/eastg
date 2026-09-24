@@ -97,6 +97,7 @@ form?.addEventListener('submit', async e => {
       body: JSON.stringify(payload)
     });
     sent = response.ok;
+    if (sent && typeof window.ym === 'function') window.ym(112999474, 'reachGoal', 'lead_submitted');
   } catch { /* The manual Telegram fallback remains available below. */ }
   if (submitButton) { submitButton.disabled = false; submitButton.firstChild.textContent = originalSubmitLabel; }
   $('#message-preview').textContent = currentMessage;

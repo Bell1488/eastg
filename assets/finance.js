@@ -36,7 +36,7 @@ $('#request-form').addEventListener('submit', async e=>{
  parts.push('Подскажите, пожалуйста, актуальный курс, итог в рублях и условия проведения.');
  message=parts.join('\n\n');
  let sent=false;
- try{const response=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});sent=response.ok;}catch{}
+ try{const response=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});sent=response.ok;if(sent&&typeof window.ym==='function')window.ym(112999474,'reachGoal','lead_submitted');}catch{}
  button.disabled=false;
  $('#message-preview').textContent=message;
  $('#send-telegram').href='https://t.me/VDS_Logistic_Support?text='+encodeURIComponent(message);
