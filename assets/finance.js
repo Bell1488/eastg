@@ -28,10 +28,13 @@ if(officeGallery){
  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&lightbox.classList.contains('is-open'))closeLightbox();});
 }
 const quickAmount=$('#quick-amount'), service=$('#request-service'),amount=$('#request-amount');
+const commissionRates={supplier:1.5,alipay:1.8,wechat:1.6};
 let method='supplier';
-$$('[data-method]').forEach(b=>b.addEventListener('click',()=>{method=b.dataset.method;$$('[data-method]').forEach(t=>{t.classList.toggle('active',t===b);t.setAttribute('aria-pressed',String(t===b));});}));
+function updateCommission(){const rate=commissionRates[method]||commissionRates.supplier;const value=Number(quickAmount?.value)||0;const target=$('#quote-commission');if(target)target.textContent=`${rate.toLocaleString('ru-RU',{minimumFractionDigits:1,maximumFractionDigits:1})}%${value?` (${(value*rate/100).toLocaleString('ru-RU',{maximumFractionDigits:2})} CNY)`:''}`;}
+$$('[data-method]').forEach(b=>b.addEventListener('click',()=>{method=b.dataset.method;$$('[data-method]').forEach(t=>{t.classList.toggle('active',t===b);t.setAttribute('aria-pressed',String(t===b));});updateCommission();}));
 $$('[data-amount]').forEach(b=>b.addEventListener('click',()=>{quickAmount.value=b.dataset.amount;quickAmount.dispatchEvent(new Event('input'));}));
-quickAmount.addEventListener('input',()=>{quickAmount.setCustomValidity('');$$('[data-amount]').forEach(b=>b.classList.toggle('active',Number(b.dataset.amount)===Number(quickAmount.value)));});
+quickAmount.addEventListener('input',()=>{quickAmount.setCustomValidity('');$$('[data-amount]').forEach(b=>b.classList.toggle('active',Number(b.dataset.amount)===Number(quickAmount.value)));updateCommission();});
+updateCommission();
 function configureRequest(kind,value){service.value=kind;amount.required=kind!=='consultation';if(value)amount.value=value;$('#request-form').hidden=false;$('#request-result').hidden=true;$('#request').scrollIntoView({behavior:paused?'instant':'smooth',block:'start'});service.focus({preventScroll:true});}
 $('#get-quote').addEventListener('click',()=>{quickAmount.setCustomValidity(quickAmount.value?'':'Укажите сумму в юанях');if(!quickAmount.reportValidity())return;configureRequest(method,quickAmount.value);});
 $$('[data-request]').forEach(b=>b.addEventListener('click',()=>configureRequest(b.dataset.request,'')));
@@ -44,9 +47,11 @@ $('#request-form').addEventListener('submit', async e=>{
  if(!form.reportValidity())return;
  const button=form.querySelector('[type="submit"]');
  button.disabled=true;
- const payload={service:service.value,amount:amount.value?Number(amount.value):null,name:$('#request-name').value.trim(),details:$('#request-details').value.trim()};
+ const payload={service:service.value,amount:amount.value?Number(amount.value):null,name:$('#request-name').value.trim(),telegram:$('#request-telegram').value.trim(),phone:$('#request-phone').value.trim(),details:$('#request-details').value.trim()};
  const parts=['Здравствуйте! Хочу обсудить '+names[service.value]+'.'];
  if(payload.name)parts.push('Меня зовут '+payload.name+'.');
+ if(payload.telegram)parts.push('Telegram: '+payload.telegram);
+ if(payload.phone)parts.push('Телефон: '+payload.phone);
  if(payload.amount)parts.push('Сумма получателю: '+new Intl.NumberFormat('ru-RU',{maximumFractionDigits:2}).format(payload.amount)+' CNY.');
  if(payload.details)parts.push('Детали: '+payload.details);
  parts.push('Подскажите, пожалуйста, актуальный курс, итог в рублях и условия проведения.');

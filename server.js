@@ -33,6 +33,8 @@ function formatLead(body) {
   if (!service) return null;
 
   const name = cleanText(body.name, 80);
+  const telegram = cleanText(body.telegram, 80);
+  const phone = cleanText(body.phone, 40);
   const route = cleanText(body.route, 160);
   const details = cleanText(body.details, 1500);
   const amount = body.amount == null || body.amount === '' ? null : Number(body.amount);
@@ -43,6 +45,8 @@ function formatLead(body) {
     `Услуга: ${service}`,
   ];
   if (name) lines.push(`Имя: ${name}`);
+  if (telegram) lines.push(`Telegram: ${telegram}`);
+  if (phone) lines.push(`Телефон: ${phone}`);
   if (amount !== null) lines.push(`Сумма: ${new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(amount)} CNY`);
   if (route) lines.push(`Маршрут: ${route}`);
   if (details) lines.push(`Детали: ${details}`);
